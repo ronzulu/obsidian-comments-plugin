@@ -2,14 +2,6 @@ import { ItemView, WorkspaceLeaf, MarkdownRenderer } from 'obsidian';
 import { VIEW_TYPE_OB_COMMENTS } from './constants'
 import { debounce } from './utils'
 
-function formatContentText(commentHtml: HTMLElement) : string {
-   
-    // <label class="ob-comment" title="" style=""> serious way <input type="checkbox"> <span style=""> #exaggeration That's a serious allegation </span></label> 
-    // We are after the " serious way " in the above
-    let end = commentHtml.innerHTML.length - commentHtml.querySelector('input[type=checkbox]+span').outerHTML.length - commentHtml.querySelector('input[type=checkbox]').outerHTML.length - 1;
-    return commentHtml.innerHTML.substring(0, end);
-}
-
 export class CommentsView extends ItemView {
 
     constructor(leaf: WorkspaceLeaf) {
@@ -66,9 +58,17 @@ export class CommentsView extends ItemView {
             tagElement.setText('Exception: ' + e);
         }
         return tagElement;
-        
     }
 
+    formatContentText(commentHtml: HTMLElement) : string {
+   
+        // <label class="ob-comment" title="" style=""> serious way <input type="checkbox"> <span style=""> #exaggeration That's a serious allegation </span></label> 
+        // We are after the " serious way " in the above
+        let end = commentHtml.innerHTML.length - commentHtml.querySelector('input[type=checkbox]+span').outerHTML.length - commentHtml.querySelector('input[type=checkbox]').outerHTML.length - 1;
+        return commentHtml.innerHTML.substring(0, end);
+    }
+    
+    
     findEndOfTag(comment: string, start: number) {
         for (var i = start; i < comment.length; i++) {
             if (comment[i] == " ")
